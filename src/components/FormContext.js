@@ -1,15 +1,25 @@
 import { createContext, useReducer } from "react";
 
 const initialState = {
-  firstName: null,
-  lastName: null,
-  phoneNumber: null,
-  address: null,
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+  address: "",
   pokemon: null,
 };
 
 function formReducer(state, action) {
   switch (action.type) {
+    case "firstName":
+      return { ...state, firstName: action.payload };
+    case "lastName":
+      return { ...state, lastName: action.payload };
+    case "phoneNumber":
+      return { ...state, phoneNumber: action.payload };
+    case "address":
+      return { ...state, address: action.payload };
+    case "pokemon":
+      return { ...state, pokemon: action.payload };
     default:
       return state;
   }
