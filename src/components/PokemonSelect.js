@@ -1,64 +1,90 @@
-import { memo, useContext, useEffect, useState } from "react";
+import { Box, Button, TextField } from "@mui/material";
+import { memo, useContext } from "react";
 import { areEqual, FixedSizeGrid as Grid } from "react-window";
-import { fetchAllPokemon, fetchPokemon } from "../services/fetchPokemon";
+import usePokemonFilter from "../hooks/usePokemonFilter";
 import { FormContext } from "./FormContext";
+import TypeFilter from "./TypeFilter";
 
 function PokemonSelect() {
   const formContext = useContext(FormContext);
-  const { dispatch } = formContext;
-  const [allPokemon, setAllPokemon] = useState();
+  const {
+    state: { allPokemon, selectedPokemon },
+    stepForward,
+    stepBack,
+    dispatch,
+  } = formContext;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetchAllPokemon();
-      return result;
-    };
+  const {
+    filteredPokemon,
+    setNameFilter,
+    setTypeFilter,
+    nameFilter,
+    typeFilter,
+  } = usePokemonFilter(allPokemon);
 
-    fetchData().then((res) => setAllPokemon(res.results));
-  }, []);
+  const handleNext = () => {
+    if (selectedPokemon) {
+      stepForward();
+    }
+  };
 
-  if (!allPokemon) return null;
+  if (!filteredPokemon) return <>Loading...</>;
 
-  const itemData = { allPokemon, dispatch };
+  const itemData = { filteredPokemon, dispatch };
 
   return (
-    <Grid
-      itemData={itemData}
-      columnCount={5}
-      columnWidth={100}
-      height={500}
-      rowCount={allPokemon.length / 5}
-      rowHeight={100}
-      width={600}
-    >
-      {Cell}
-    </Grid>
+    <>
+      <TextField
+        name="nameFilter"
+        label="Filter by name"
+        value={nameFilter}
+        onChange={(e) => setNameFilter(e.target.value)}
+      />
+      <TypeFilter setTypeFilter={setTypeFilter} typeFilter={typeFilter} />
+      <Grid
+        itemData={itemData}
+        columnCount={5}
+        columnWidth={100}
+        height={500}
+        rowCount={filteredPokemon.length / 5}
+        rowHeight={100}
+        width={600}
+      >
+        {Cell}
+      </Grid>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+        <Button variant="outlined" onClick={stepBack} sx={{ mr: 1 }}>
+          Back
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={handleNext}
+          disabled={!selectedPokemon}
+        >
+          Next
+        </Button>
+      </Box>
+    </>
   );
 }
 
 const Cell = memo(({ data, columnIndex, rowIndex, style }) => {
-  const { allPokemon, dispatch } = data;
-  const [pokemonData, setPokemonData] = useState();
+  const { filteredPokemon, dispatch } = data;
+
+  if (!filteredPokemon || filteredPokemon.length === 0) return null;
 
   function handleSelect(selectedPokemon) {
-    dispatch({ type: "pokemon", payload: selectedPokemon });
+    dispatch({ type: "selectedPokemon", payload: selectedPokemon });
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const index = rowIndex * 5 + columnIndex;
-      const result = await fetchPokemon(allPokemon[index].url);
-      return result;
-    };
-
-    fetchData().then((res) => setPokemonData(res));
-  }, []);
+  const index = rowIndex * 5 + columnIndex;
+  const pokemonData = filteredPokemon[index];
 
   if (!pokemonData) return null;
 
   return (
     <div style={style} onClick={() => handleSelect(pokemonData)}>
-      <img src={pokemonData.sprites.front_default} />
+      <img src={pokemonData.image} alt={pokemonData.name} />
       <>{pokemonData.name}</>
     </div>
   );
