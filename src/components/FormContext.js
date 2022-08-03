@@ -24,6 +24,8 @@ function formReducer(state, action) {
       return { ...state, allPokemon: action.payload };
     case "selectedPokemon":
       return { ...state, selectedPokemon: action.payload };
+    case "resetForm":
+      return initialState;
     default:
       return state;
   }
@@ -32,11 +34,11 @@ function formReducer(state, action) {
 export const FormContext = createContext();
 
 export const FormProvider = function ({ children }) {
-  const { currentStep, stepForward, stepBack } = useFormProgress();
+  const { currentStep, stepForward, stepBack, setStep } = useFormProgress();
   const [state, dispatch] = useReducer(formReducer, initialState);
   return (
     <FormContext.Provider
-      value={{ state, dispatch, currentStep, stepForward, stepBack }}
+      value={{ state, dispatch, currentStep, stepForward, stepBack, setStep }}
     >
       {children}
     </FormContext.Provider>

@@ -1,8 +1,26 @@
 import { MenuItem, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { fetchTypes } from "../services/fetchTypes";
 
 function TypeFilter({ setTypeFilter, typeFilter }) {
+  const [types, setTypes] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await fetchTypes();
+      return result;
+    };
+
+    fetchData().then((res) => {
+      setTypes(res.results.map((type) => type.name));
+    });
+  }, []);
+
+  if (!types) return null;
+
   return (
     <TextField
+      size="small"
       select
       value={typeFilter}
       label="Filter by type"
@@ -10,9 +28,11 @@ function TypeFilter({ setTypeFilter, typeFilter }) {
       sx={{ width: 200 }}
     >
       <MenuItem value={"none"}>-</MenuItem>
-      <MenuItem value={"fire"}>Fire</MenuItem>
-      <MenuItem value={"water"}>Water</MenuItem>
-      <MenuItem value={"normal"}>Normal</MenuItem>
+      {types.map((type) => (
+        <MenuItem key={`type-${type}`} value={type}>
+          {type}
+        </MenuItem>
+      ))}
     </TextField>
   );
 }

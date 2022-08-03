@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext } from "react";
 import useValidation from "../hooks/useValidation";
@@ -29,7 +29,10 @@ function UserDetails() {
   };
 
   return (
-    <>
+    <Box sx={{ textAlign: "center" }}>
+      <Typography variant="h6" sx={{ mb: 1 }}>
+        Contact Info
+      </Typography>
       <Stack spacing={1}>
         <TextField
           error={!!errors.firstName}
@@ -77,7 +80,7 @@ function UserDetails() {
           Next
         </Button>
       </Box>
-    </>
+    </Box>
   );
 }
 

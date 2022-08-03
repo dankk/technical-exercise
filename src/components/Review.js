@@ -14,13 +14,6 @@ function Review() {
   } = formContext;
 
   const handleSubmit = () => {
-    console.log("submit", {
-      firstName,
-      lastName,
-      phoneNumber,
-      address,
-      selectedPokemon,
-    });
     stepForward();
   };
 

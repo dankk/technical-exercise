@@ -1,4 +1,5 @@
-import { Container, Paper } from "@mui/material";
+import { Button, Container, Paper, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 import { useContext, useEffect } from "react";
 import { fetchAllPokemon } from "../services/fetchPokemon";
 import { FormContext } from "./FormContext";
@@ -29,9 +30,32 @@ function SignupForm() {
         variant="outlined"
         sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
       >
-        {currentStep === steps.length ? <>submitted</> : steps[1]}
+        {currentStep === steps.length ? (
+          <SubmissionComplete />
+        ) : (
+          steps[currentStep]
+        )}
       </Paper>
     </Container>
+  );
+}
+
+function SubmissionComplete() {
+  const formContext = useContext(FormContext);
+  const { dispatch, setStep } = formContext;
+
+  const handleReset = () => {
+    dispatch({ type: "resetForm" });
+    setStep(0);
+  };
+
+  return (
+    <Box sx={{ textAlign: "center" }}>
+      <Typography>Submission Complete!</Typography>
+      <Button variant="outlined" onClick={handleReset} sx={{ mt: 1 }}>
+        New Entry
+      </Button>
+    </Box>
   );
 }
 
