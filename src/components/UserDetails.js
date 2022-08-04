@@ -3,11 +3,13 @@ import { Box } from "@mui/system";
 import { useContext } from "react";
 import useValidation from "../hooks/useValidation";
 import { FormContext } from "./FormContext";
+import { useNavigate } from "react-router-dom";
 
 function UserDetails() {
+  const navigate = useNavigate();
   const { validateField, errors } = useValidation();
   const formContext = useContext(FormContext);
-  const { state, stepForward, dispatch } = formContext;
+  const { state, dispatch } = formContext;
 
   const { firstName, lastName, phoneNumber, address } = state;
 
@@ -26,7 +28,7 @@ function UserDetails() {
 
   const handleNext = () => {
     if (!isNextDisabled) {
-      stepForward();
+      navigate("/2");
     }
   };
 

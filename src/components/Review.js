@@ -2,19 +2,31 @@ import { Button, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext } from "react";
 import { FormContext } from "./FormContext";
+import { useNavigate } from "react-router-dom";
 
 const boxStyle = { display: "flex", justifyContent: "space-between" };
 
 function Review() {
+  const navigate = useNavigate();
   const formContext = useContext(FormContext);
   const {
     state: { firstName, lastName, phoneNumber, address, selectedPokemon },
-    stepForward,
-    stepBack,
   } = formContext;
 
+  const isSubmitDisabled = !(
+    firstName &&
+    lastName &&
+    phoneNumber &&
+    address &&
+    selectedPokemon
+  );
+
   const handleSubmit = () => {
-    stepForward();
+    if (!isSubmitDisabled) {
+      navigate("/4");
+    } else {
+      window.alert("something went wrong!");
+    }
   };
 
   return (
@@ -41,14 +53,22 @@ function Review() {
         </Box>
         <Box sx={boxStyle}>
           <Typography>Pokemon</Typography>
-          <Typography>{selectedPokemon.name}</Typography>
+          <Typography>{selectedPokemon?.name}</Typography>
         </Box>
       </Stack>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
-        <Button variant="outlined" onClick={stepBack} sx={{ mr: 1 }}>
+        <Button
+          variant="outlined"
+          onClick={() => navigate("/2")}
+          sx={{ mr: 1 }}
+        >
           Back
         </Button>
-        <Button variant="outlined" onClick={handleSubmit}>
+        <Button
+          variant="outlined"
+          onClick={handleSubmit}
+          disabled={isSubmitDisabled}
+        >
           Submit
         </Button>
       </Box>

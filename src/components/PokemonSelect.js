@@ -4,15 +4,15 @@ import { areEqual, FixedSizeGrid } from "react-window";
 import usePokemonFilter from "../hooks/usePokemonFilter";
 import { FormContext } from "./FormContext";
 import TypeFilter from "./TypeFilter";
+import { useNavigate } from "react-router-dom";
 
 const columnCount = 4;
 
 function PokemonSelect() {
+  const navigate = useNavigate();
   const formContext = useContext(FormContext);
   const {
     state: { allPokemon, selectedPokemon },
-    stepForward,
-    stepBack,
     dispatch,
   } = formContext;
 
@@ -26,7 +26,7 @@ function PokemonSelect() {
 
   const handleNext = () => {
     if (selectedPokemon) {
-      stepForward();
+      navigate("/3");
     }
   };
 
@@ -65,7 +65,11 @@ function PokemonSelect() {
         {Cell}
       </FixedSizeGrid>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
-        <Button variant="outlined" onClick={stepBack} sx={{ mr: 1 }}>
+        <Button
+          variant="outlined"
+          onClick={() => navigate("/1")}
+          sx={{ mr: 1 }}
+        >
           Back
         </Button>
         <Button

@@ -1,6 +1,11 @@
 import { Button, Container, Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  useNavigate,
+  useRoutes,
+} from "react-router-dom";
 import { fetchAllPokemon } from "../services/fetchPokemon";
 import { FormContext } from "./FormContext";
 import PokemonSelect from "./PokemonSelect";
@@ -8,10 +13,8 @@ import Review from "./Review";
 import UserDetails from "./UserDetails";
 
 function SignupForm() {
-  const steps = [<UserDetails />, <PokemonSelect />, <Review />];
-
   const formContext = useContext(FormContext);
-  const { state, dispatch, currentStep } = formContext;
+  const { state, dispatch } = formContext;
 
   useEffect(() => {
     if (state.allPokemon) return;
@@ -31,19 +34,18 @@ function SignupForm() {
         variant="outlined"
         sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
       >
-        {currentStep === steps.length ? (
-          <SubmissionComplete />
-        ) : (
-          steps[currentStep]
-        )}
+        <Router>
+          <FormRoutes />
+        </Router>
       </Paper>
     </Container>
   );
 }
 
 function SubmissionComplete() {
+  const navigate = useNavigate();
   const formContext = useContext(FormContext);
-  const { dispatch, setStep } = formContext;
+  const { dispatch } = formContext;
 
   useEffect(() => {
     localStorage.removeItem("formInputs");
@@ -51,7 +53,7 @@ function SubmissionComplete() {
 
   const handleReset = () => {
     dispatch({ type: "resetForm" });
-    setStep(0);
+    navigate("/");
   };
 
   return (
@@ -62,6 +64,16 @@ function SubmissionComplete() {
       </Button>
     </Box>
   );
+}
+
+function FormRoutes() {
+  return useRoutes([
+    { path: "/", element: <UserDetails /> },
+    { path: "/1", element: <UserDetails /> },
+    { path: "/2", element: <PokemonSelect /> },
+    { path: "/3", element: <Review /> },
+    { path: "/4", element: <SubmissionComplete /> },
+  ]);
 }
 
 export default SignupForm;

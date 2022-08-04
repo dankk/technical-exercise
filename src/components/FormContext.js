@@ -1,5 +1,4 @@
 import { createContext, useEffect, useReducer } from "react";
-import useFormProgress from "../hooks/useFormProgress";
 import { getStoredValue, storeValue } from "../utils/localStorage";
 
 const defaultInitialState = {
@@ -41,7 +40,6 @@ export const FormContext = createContext();
 
 export function FormProvider({ children }) {
   const initialState = getInitialState();
-  const { currentStep, stepForward, stepBack, setStep } = useFormProgress();
   const [state, dispatch] = useReducer(formReducer, initialState);
 
   useEffect(() => {
@@ -55,9 +53,7 @@ export function FormProvider({ children }) {
   }, [state]);
 
   return (
-    <FormContext.Provider
-      value={{ state, dispatch, currentStep, stepForward, stepBack, setStep }}
-    >
+    <FormContext.Provider value={{ state, dispatch }}>
       {children}
     </FormContext.Provider>
   );
