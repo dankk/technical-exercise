@@ -1,7 +1,8 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import useFormProgress from "../hooks/useFormProgress";
+import { getStoredValue, storeValue } from "../utils/localStorage";
 
-const initialState = {
+const defaultInitialState = {
   firstName: "",
   lastName: "",
   phoneNumber: "",
@@ -25,17 +26,34 @@ function formReducer(state, action) {
     case "selectedPokemon":
       return { ...state, selectedPokemon: action.payload };
     case "resetForm":
-      return initialState;
+      return { ...defaultInitialState, allPokemon: state.allPokemon };
     default:
       return state;
   }
 }
 
+const getInitialState = () => {
+  const storedValues = getStoredValue("formInputs");
+  return { ...defaultInitialState, ...storedValues };
+};
+
 export const FormContext = createContext();
 
-export const FormProvider = function ({ children }) {
+export function FormProvider({ children }) {
+  const initialState = getInitialState();
   const { currentStep, stepForward, stepBack, setStep } = useFormProgress();
   const [state, dispatch] = useReducer(formReducer, initialState);
+
+  useEffect(() => {
+    storeValue("formInputs", {
+      firstName: state.firstName,
+      lastName: state.lastName,
+      phoneNumber: state.phoneNumber,
+      address: state.address,
+      selectedPokemon: state.selectedPokemon,
+    });
+  }, [state]);
+
   return (
     <FormContext.Provider
       value={{ state, dispatch, currentStep, stepForward, stepBack, setStep }}
@@ -43,4 +61,4 @@ export const FormProvider = function ({ children }) {
       {children}
     </FormContext.Provider>
   );
-};
+}

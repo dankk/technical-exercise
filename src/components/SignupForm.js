@@ -11,9 +11,10 @@ function SignupForm() {
   const steps = [<UserDetails />, <PokemonSelect />, <Review />];
 
   const formContext = useContext(FormContext);
-  const { dispatch, currentStep } = formContext;
+  const { state, dispatch, currentStep } = formContext;
 
   useEffect(() => {
+    if (state.allPokemon) return;
     const fetchData = async () => {
       const result = await fetchAllPokemon();
       return result;
@@ -22,7 +23,7 @@ function SignupForm() {
     fetchData().then((res) => {
       dispatch({ type: "allPokemon", payload: res });
     });
-  }, [dispatch]);
+  }, [dispatch, state.allPokemon]);
 
   return (
     <Container maxWidth="sm">
@@ -43,6 +44,10 @@ function SignupForm() {
 function SubmissionComplete() {
   const formContext = useContext(FormContext);
   const { dispatch, setStep } = formContext;
+
+  useEffect(() => {
+    localStorage.removeItem("formInputs");
+  });
 
   const handleReset = () => {
     dispatch({ type: "resetForm" });

@@ -7,11 +7,9 @@ import { FormContext } from "./FormContext";
 function UserDetails() {
   const { validateField, errors } = useValidation();
   const formContext = useContext(FormContext);
-  const {
-    state: { firstName, lastName, phoneNumber, address },
-    stepForward,
-    dispatch,
-  } = formContext;
+  const { state, stepForward, dispatch } = formContext;
+
+  const { firstName, lastName, phoneNumber, address } = state;
 
   const isNextDisabled =
     Object.keys(errors).length > 0 ||
@@ -20,6 +18,10 @@ function UserDetails() {
   const handleChange = (e) => {
     validateField(e);
     dispatch({ type: e.target.name, payload: e.target.value });
+  };
+
+  const handleBlur = (e) => {
+    validateField(e);
   };
 
   const handleNext = () => {
@@ -41,7 +43,7 @@ function UserDetails() {
           name="firstName"
           value={firstName}
           onChange={handleChange}
-          onBlur={validateField}
+          onBlur={handleBlur}
         />
         <TextField
           error={!!errors.lastName}
@@ -50,7 +52,7 @@ function UserDetails() {
           name="lastName"
           value={lastName}
           onChange={handleChange}
-          onBlur={validateField}
+          onBlur={handleBlur}
         />
         <TextField
           error={!!errors.phoneNumber}
@@ -59,7 +61,7 @@ function UserDetails() {
           name="phoneNumber"
           value={phoneNumber}
           onChange={handleChange}
-          onBlur={validateField}
+          onBlur={handleBlur}
         />
         <TextField
           error={!!errors.address}
@@ -68,7 +70,7 @@ function UserDetails() {
           name="address"
           value={address}
           onChange={handleChange}
-          onBlur={validateField}
+          onBlur={handleBlur}
         />
       </Stack>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>

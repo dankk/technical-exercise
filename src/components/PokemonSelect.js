@@ -30,7 +30,7 @@ function PokemonSelect() {
     }
   };
 
-  if (!filteredPokemon) return <>Loading...</>;
+  if (!allPokemon || !filteredPokemon) return <>Loading...</>;
 
   const itemData = { filteredPokemon, dispatch, selectedPokemon };
 
