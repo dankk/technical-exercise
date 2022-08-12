@@ -6,28 +6,12 @@ import {
   useNavigate,
   useRoutes,
 } from "react-router-dom";
-import { fetchAllPokemon } from "../services/fetchPokemon";
-import { FormContext } from "./FormContext";
+import { FormContext } from "../context/FormContext";
 import PokemonSelect from "./PokemonSelect";
 import Review from "./Review";
 import UserDetails from "./UserDetails";
 
 function SignupForm() {
-  const formContext = useContext(FormContext);
-  const { state, dispatch } = formContext;
-
-  useEffect(() => {
-    if (state.allPokemon) return;
-    const fetchData = async () => {
-      const result = await fetchAllPokemon();
-      return result;
-    };
-
-    fetchData().then((res) => {
-      dispatch({ type: "allPokemon", payload: res });
-    });
-  }, [dispatch, state.allPokemon]);
-
   return (
     <Container maxWidth="sm">
       <Paper
@@ -52,7 +36,7 @@ function SubmissionComplete() {
   });
 
   const handleReset = () => {
-    dispatch({ type: "resetForm" });
+    dispatch({ type: "RESET" });
     navigate("/");
   };
 

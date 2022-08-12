@@ -1,18 +1,19 @@
 import { MenuItem, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchTypes } from "../services/fetchTypes";
+import PokemonService from "../services/pokemonService";
 
 function TypeFilter({ setTypeFilter, typeFilter }) {
   const [types, setTypes] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await fetchTypes();
+      const pokemonService = new PokemonService();
+      const result = await pokemonService.fetchTypes();
       return result;
     };
 
     fetchData().then((res) => {
-      setTypes(res.results.map((type) => type.name));
+      setTypes(res.results.map((type) => type.name).sort());
     });
   }, []);
 

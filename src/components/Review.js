@@ -1,7 +1,7 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext } from "react";
-import { FormContext } from "./FormContext";
+import { FormContext } from "../context/FormContext";
 import { useNavigate } from "react-router-dom";
 
 const boxStyle = { display: "flex", justifyContent: "space-between" };

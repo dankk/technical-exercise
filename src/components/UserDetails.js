@@ -2,7 +2,7 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext } from "react";
 import useValidation from "../hooks/useValidation";
-import { FormContext } from "./FormContext";
+import { FormContext } from "../context/FormContext";
 import { useNavigate } from "react-router-dom";
 
 function UserDetails() {
@@ -19,7 +19,10 @@ function UserDetails() {
 
   const handleChange = (e) => {
     validateField(e);
-    dispatch({ type: e.target.name, payload: e.target.value });
+    dispatch({
+      type: "UPDATE",
+      payload: { key: e.target.name, value: e.target.value },
+    });
   };
 
   const handleBlur = (e) => {

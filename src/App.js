@@ -1,11 +1,14 @@
-import { FormProvider } from "./components/FormContext";
+import { FormProvider } from "./context/FormContext";
 import SignupForm from "./components/SignupForm";
+import { PokemonProvider } from "./context/PokemonContext";
 
 function App() {
   return (
-    <FormProvider>
-      <SignupForm />
-    </FormProvider>
+    <PokemonProvider>
+      <FormProvider>
+        <SignupForm />
+      </FormProvider>
+    </PokemonProvider>
   );
 }
 

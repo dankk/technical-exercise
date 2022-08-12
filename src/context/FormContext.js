@@ -6,28 +6,15 @@ const defaultInitialState = {
   lastName: "",
   phoneNumber: "",
   address: "",
-  allPokemon: null,
   selectedPokemon: null,
 };
 
 function formReducer(state, action) {
-  switch (action.type) {
-    case "firstName":
-      return { ...state, firstName: action.payload };
-    case "lastName":
-      return { ...state, lastName: action.payload };
-    case "phoneNumber":
-      return { ...state, phoneNumber: action.payload };
-    case "address":
-      return { ...state, address: action.payload };
-    case "allPokemon":
-      return { ...state, allPokemon: action.payload };
-    case "selectedPokemon":
-      return { ...state, selectedPokemon: action.payload };
-    case "resetForm":
-      return { ...defaultInitialState, allPokemon: state.allPokemon };
-    default:
-      return state;
+  if (action.type === "UPDATE") {
+    return { ...state, [action.payload.key]: action.payload.value };
+  }
+  if (action.type === "RESET") {
+    return { ...defaultInitialState };
   }
 }
 

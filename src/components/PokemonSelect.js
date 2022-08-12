@@ -2,17 +2,21 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { memo, useContext } from "react";
 import { areEqual, FixedSizeGrid } from "react-window";
 import usePokemonFilter from "../hooks/usePokemonFilter";
-import { FormContext } from "./FormContext";
+import { FormContext } from "../context/FormContext";
 import TypeFilter from "./TypeFilter";
 import { useNavigate } from "react-router-dom";
+import { PokemonContext } from "../context/PokemonContext";
 
 const columnCount = 4;
 
 function PokemonSelect() {
   const navigate = useNavigate();
+  const pokemonContext = useContext(PokemonContext);
   const formContext = useContext(FormContext);
+
+  const { allPokemon } = pokemonContext;
   const {
-    state: { allPokemon, selectedPokemon },
+    state: { selectedPokemon },
     dispatch,
   } = formContext;
 
@@ -90,7 +94,10 @@ const Cell = memo(({ data, columnIndex, rowIndex, style }) => {
   if (!filteredPokemon || filteredPokemon.length === 0) return null;
 
   const handleSelect = (selectedPokemon) => {
-    dispatch({ type: "selectedPokemon", payload: selectedPokemon });
+    dispatch({
+      type: "UPDATE",
+      payload: { key: "selectedPokemon", value: selectedPokemon },
+    });
   };
 
   const index = rowIndex * columnCount + columnIndex;
